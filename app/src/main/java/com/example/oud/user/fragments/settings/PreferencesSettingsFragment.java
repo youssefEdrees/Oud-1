@@ -38,6 +38,8 @@ public class PreferencesSettingsFragment extends PreferenceFragmentCompat {
     String token;
 
     Preference logoutPreference;
+    Preference changePasswordPreference;
+    Preference updateInfoPreference;
     Preference clearCachePreference;
     SwitchPreferenceCompat autoPlaySwitchPreference;
     SwitchPreferenceCompat allowNotificationsSwitchPreference;
@@ -53,7 +55,7 @@ public class PreferencesSettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        // Load the preferences from an XML resource
+
         myId = OudUtils.getUserId(context);
         token = OudUtils.getToken(context);
 
@@ -61,6 +63,9 @@ public class PreferencesSettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences_settings_fragment, rootKey);
         logoutPreference = findPreference("log_out");
         logoutPreference.setSummary("you are logged in as " + OudUtils.getUserId(context));
+
+        changePasswordPreference = findPreference("change_password");
+        updateInfoPreference = findPreference("update_info");
 
         clearCachePreference = findPreference("clear_cache");
         autoPlaySwitchPreference = (SwitchPreferenceCompat)findPreference("auto_play");
@@ -82,7 +87,8 @@ public class PreferencesSettingsFragment extends PreferenceFragmentCompat {
         setClearCacheOnClickListener();
         setAutoPlayOnClickListener();
         setAllowNotificationsOnClickListener();
-
+        setChangePasswordOnClickListener();
+        setUpdateInfoOnClickListener();
         boolean isAutoPlayback = OudUtils.isAutoPlayback(context);
         autoPlaySwitchPreference.setChecked(isAutoPlayback);
         allowNotificationsSwitchPreference.setChecked(OudUtils.isNotificationAllowed(getContext()));
@@ -90,6 +96,26 @@ public class PreferencesSettingsFragment extends PreferenceFragmentCompat {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    private void setChangePasswordOnClickListener(){
+        changePasswordPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UpdatePasswordFragment.show(getActivity(),R.id.nav_host_fragment);
+                return true;
+            }
+        });
+
+
+    }
+    private void setUpdateInfoOnClickListener(){
+        updateInfoPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UpdateInfoFragment.show(getActivity(),R.id.nav_host_fragment);
+                return true;
+            }
+        });
+    }
     private void setLogoutOnClickListener(){
         logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

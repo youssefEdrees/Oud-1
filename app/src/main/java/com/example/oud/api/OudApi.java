@@ -352,4 +352,9 @@ public interface OudApi {
                                      @Query("q") String query,
                                      @Query(value = "type", encoded = true) String type);
 
+
+
+    @PATCH("me/updatePassword")
+    Call<LoginResponse> updatePassword(@Header(AUTHORIZATION_HEADER) String token,@Body UpdatePasswordRequest updatePasswordRequest);
+
 }

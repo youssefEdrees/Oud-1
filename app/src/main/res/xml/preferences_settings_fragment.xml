@@ -68,6 +68,20 @@
         app:title="other">
 
         <Preference
+            app:key="change_password"
+            app:summary="update your password"
+            app:title="change password"
+            app:icon="@drawable/ic_change_password"/>
+
+        <Preference
+            app:key="update_info"
+            app:summary="change display name , date of birth , email ,...."
+            app:title="update info"
+            app:icon="@drawable/ic_update_info"/>
+
+
+
+        <Preference
             app:key="log_out"
             app:summary="you are logged in as {displayName}"
             app:title="Log out"
