@@ -80,7 +80,7 @@ public class ArtistActivity extends AppCompatActivity implements ConnectionStatu
         });
 
         FragmentTransaction homeTransaction = getSupportFragmentManager().beginTransaction();
-        homeTransaction.replace(R.id.nav_host_fragment_artist,new ArtistHomeFragment(), Constants.ARTIST_HOME_FRAGMENT_TAG);
+        homeTransaction.replace(R.id.nav_host_fragment_artist,new ArtistHomeFragment(this), Constants.ARTIST_HOME_FRAGMENT_TAG);
         bottomNavViewBackStack.push(R.id.navigation_home);
         homeTransaction.commit();
 
@@ -103,7 +103,7 @@ public class ArtistActivity extends AppCompatActivity implements ConnectionStatu
             case R.id.navigation_artist_home:
                 ArtistHomeFragment homeFragment = (ArtistHomeFragment) manager.findFragmentByTag(Constants.ARTIST_HOME_FRAGMENT_TAG);
                 if (homeFragment == null)
-                    transaction.replace(R.id.nav_host_fragment_artist,new ArtistHomeFragment(), Constants.ARTIST_HOME_FRAGMENT_TAG);
+                    transaction.replace(R.id.nav_host_fragment_artist,new ArtistHomeFragment(this), Constants.ARTIST_HOME_FRAGMENT_TAG);
                 else
                     transaction.replace(R.id.nav_host_fragment_artist, homeFragment, Constants.ARTIST_HOME_FRAGMENT_TAG);
                 break;

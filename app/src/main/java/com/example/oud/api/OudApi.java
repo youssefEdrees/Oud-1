@@ -357,4 +357,11 @@ public interface OudApi {
     @PATCH("me/updatePassword")
     Call<LoginResponse> updatePassword(@Header(AUTHORIZATION_HEADER) String token,@Body UpdatePasswordRequest updatePasswordRequest);
 
+
+    @GET ("artists/{artistId}/top-tracks")
+    Call<TopTracks> getTopTracks(@Header(AUTHORIZATION_HEADER) String token,@Path("artistId") String artistId);
+
+    @PATCH ("me/artists/top-tracks")
+    Call<ResponseBody> saveTracks(@Header(AUTHORIZATION_HEADER) String token,@Body PopularTracksRequest popularTracksRequest);
+
 }

@@ -21,6 +21,18 @@
     "type": "string"
   }
   ,
+  "top_tracks":{
+    "tracks": [
+      {"_id": "track1", "name": "track1","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"albumId": "string","album": {"_id": "string","album_type": "string","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"image": "string","name": "string","type": "string","released": true},"type": "string","duartion": 0,"views": 0},
+      {"_id": "track2", "name": "track2","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"albumId": "string","album": {"_id": "string","album_type": "string","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"image": "string","name": "string","type": "string","released": true},"type": "string","duartion": 0,"views": 0},
+      {"_id": "track3", "name": "track3","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"albumId": "string","album": {"_id": "string","album_type": "string","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"image": "string","name": "string","type": "string","released": true},"type": "string","duartion": 0,"views": 0},
+      {"_id": "track4", "name": "track4","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"albumId": "string","album": {"_id": "string","album_type": "string","artists": [{"_id": "string","displayName": "string","type": "string","images": ["string"]}],"image": "string","name": "string","type": "string","released": true},"type": "string","duartion": 0,"views": 0}
+    ]
+  }
+    
+
+  
+  ,
   "user1": {"_id": "user1", "displayName": "user1", "followersCount": 0,"images": ["https://source.unsplash.com/random/801x600"],"verified": false,"type": "string"},
 
     "playlistsUser1":{"items": [

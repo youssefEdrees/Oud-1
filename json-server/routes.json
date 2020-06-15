@@ -115,6 +115,8 @@
 
     "/genres?offset=0":"/genres", 
 
+    "/artists/user0/top-tracks":"/top_tracks",
+
     
     
 
