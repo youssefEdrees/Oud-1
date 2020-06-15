@@ -11,6 +11,7 @@ import com.example.oud.api.TopTracks;
 import com.example.oud.connectionaware.ConnectionAwareRepository;
 import com.example.oud.connectionaware.FailureSuccessHandledCallback;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -32,9 +33,8 @@ public class ArtistHomeRepository extends ConnectionAwareRepository {
     }
 
     public void savePopularSongs(String token, PopularTracksRequest popularTracksRequest, ConnectionStatusListener connectionStatusListener){
-        
-
-
+        Call<ResponseBody> call = oudApi.setTopTracks(token,popularTracksRequest);
+        addCall(call).enqueue(new FailureSuccessHandledCallback<ResponseBody>(this,connectionStatusListener){});
     }
 
 

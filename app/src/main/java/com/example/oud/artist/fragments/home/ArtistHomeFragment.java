@@ -19,17 +19,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.oud.ConnectionStatusListener;
 import com.example.oud.OudUtils;
 import com.example.oud.R;
+import com.example.oud.api.PopularTracksRequest;
 import com.example.oud.api.TopTracks;
 import com.example.oud.api.TrackPreview;
 import com.example.oud.connectionaware.ConnectionAwareFragment;
 import com.example.oud.user.fragments.profile.ProfileFragment;
 import com.example.oud.user.fragments.profile.ProfileViewModel;
 
+import java.util.ArrayList;
+
 public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewModel> implements OnStartDragListener{
 
     private ItemTouchHelper mItemTouchHelper;
+    PopularReleasesAdapter adapter;
     Button saveButton;
     Button addSongButton;
 
@@ -44,9 +49,10 @@ public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewMo
         saveButton = view.findViewById(R.id.btn_save_popular_songs);
         addSongButton = view.findViewById(R.id.btn_add_popular_song);
 
-        PopularReleasesAdapter adapter = new PopularReleasesAdapter(getContext(),this);
+        adapter = new PopularReleasesAdapter(getContext(),this);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_popular_release);
 
+        setSaveOnClickListener();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -55,10 +61,7 @@ public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewMo
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
-        adapter.addItem("track","track");
-        adapter.addItem("track","track");
-        adapter.addItem("track","track");
-        adapter.addItem("track","track");
+
         mViewModel.getMyTopSongs(OudUtils.getToken(getContext()),OudUtils.getUserId(getContext())).observe(getViewLifecycleOwner(), new Observer<TopTracks>() {
             @Override
             public void onChanged(TopTracks topTracks) {
@@ -66,13 +69,35 @@ public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewMo
                 tracks = topTracks.getTracks();
                 for(int i=0;i<tracks.length;i++){
                     adapter.addItem(tracks[i].get_id(),tracks[i].getName());
-
                 }
             }
         });
     }
 
 
+    private void setSaveOnClickListener(){
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                     ArrayList<String> tracksIds = adapter.getTracksIds();
+                     String [] tracks = new String[tracksIds.size()];
+                     tracks = tracksIds.toArray(tracks);
+                     PopularTracksRequest popularTracksRequest= new PopularTracksRequest(tracks);
+                    ConnectionStatusListener connectionStatusListener = new ConnectionStatusListener() {
+                        @Override
+                        public void onConnectionSuccess() {
+                            Toast.makeText(getContext(),"Top songs updated",Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onConnectionFailure() {
+                            Toast.makeText(getContext(),"Top songs update failed",Toast.LENGTH_LONG).show();
+                        }
+                    };
+                     mViewModel.savePopularSongs(OudUtils.getToken(getContext()),popularTracksRequest,connectionStatusListener);
+            }
+        });
+    }
 
     public ArtistHomeFragment(Activity activity){
         super(ArtistHomeViewModel.class,

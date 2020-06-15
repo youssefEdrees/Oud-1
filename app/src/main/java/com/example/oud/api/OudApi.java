@@ -362,6 +362,6 @@ public interface OudApi {
     Call<TopTracks> getTopTracks(@Header(AUTHORIZATION_HEADER) String token,@Path("artistId") String artistId);
 
     @PATCH ("me/artists/top-tracks")
-    Call<ResponseBody> saveTracks(@Header(AUTHORIZATION_HEADER) String token,@Body PopularTracksRequest popularTracksRequest);
+    Call<ResponseBody> setTopTracks(@Header(AUTHORIZATION_HEADER) String token,@Body PopularTracksRequest popularTracksRequest);
 
 }
