@@ -7,6 +7,7 @@ import com.example.oud.Constants;
 import com.example.oud.api.LoggedInUser;
 import com.example.oud.api.LoginResponse;
 import com.example.oud.api.UpdatePasswordRequest;
+import com.example.oud.api.UpdateProfileData;
 import com.example.oud.connectionaware.ConnectionAwareViewModel;
 
 public class UpdatePasswordViewModel extends ConnectionAwareViewModel<UpdatePasswordRepository> {
@@ -25,6 +26,9 @@ public class UpdatePasswordViewModel extends ConnectionAwareViewModel<UpdatePass
         return mRepo.updatePassword(token,updatePasswordRequest,connectionStatusListener);
     }
 
+    public void updateProfile(String token, UpdateProfileData data, ConnectionStatusListener connectionStatusListener , MutableLiveData<String> errorMessage){
+        mRepo.updateProfile(token,data,connectionStatusListener,errorMessage);
+    }
     @Override
     public void clearData() {
     }
