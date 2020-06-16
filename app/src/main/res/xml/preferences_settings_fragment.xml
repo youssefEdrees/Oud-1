@@ -80,12 +80,19 @@
             app:icon="@drawable/ic_update_info"/>
 
 
+        <Preference
+            app:key="switch_artist"
+            app:summary="switch to artist (only works if you are an artist)"
+            app:title="switch to artist"
+            />
 
         <Preference
             app:key="log_out"
             app:summary="you are logged in as {displayName}"
             app:title="Log out"
             app:icon="@drawable/ic_logout_thin"/>
+
+
 
     </PreferenceCategory>
 

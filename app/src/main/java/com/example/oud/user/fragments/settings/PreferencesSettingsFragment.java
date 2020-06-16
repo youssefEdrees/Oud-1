@@ -27,6 +27,7 @@ import com.example.oud.OudUtils;
 import com.example.oud.R;
 
 import com.example.oud.api.ProfilePreview;
+import com.example.oud.artist.ArtistActivity;
 import com.example.oud.authentication.MainActivity;
 
 
@@ -71,18 +72,30 @@ public class PreferencesSettingsFragment extends PreferenceFragmentCompat {
         autoPlaySwitchPreference = (SwitchPreferenceCompat)findPreference("auto_play");
         allowNotificationsSwitchPreference = (SwitchPreferenceCompat)findPreference("enable_notifications");
 
+        findPreference("switch_artist").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent i = new Intent(getActivity(), ArtistActivity.class);
+                startActivity(i);
+                return true;
+            }
+        });
 
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         mViewModel.getProfile(myId,token).observe(getViewLifecycleOwner(), new Observer<ProfilePreview>() {
             @Override
             public void onChanged(ProfilePreview profilePreview) {
                 logoutPreference.setSummary("you are logged in as " + profilePreview.getDisplayName());
             }
         });
+
+
+
         setLogoutOnClickListener();
         setClearCacheOnClickListener();
         setAutoPlayOnClickListener();
