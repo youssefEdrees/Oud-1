@@ -39,8 +39,6 @@ public class PlaylistRepository extends ConnectionAwareRepository {
     public MutableLiveData<Playlist> fetchPlaylist(String token, String playlistId) {
         MutableLiveData<Playlist> playlistMutableLiveData = new MutableLiveData<>();
 
-
-        //OudApi oudApi = instantiateRetrofitOudApi();
         Call<Playlist> playlistCall = oudApi.playlist(token, playlistId);
 
         addCall(playlistCall).enqueue(new FailureSuccessHandledCallback<Playlist>(this) {

@@ -1,5 +1,6 @@
 package com.example.oud.artist.fragments.home;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.example.oud.OudUtils;
 import com.example.oud.R;
 import com.example.oud.api.PopularTracksRequest;
 import com.example.oud.api.TopTracks;
+import com.example.oud.api.Track;
 import com.example.oud.api.TrackPreview;
 import com.example.oud.connectionaware.ConnectionAwareFragment;
 import com.example.oud.user.fragments.profile.ProfileFragment;
@@ -52,29 +55,45 @@ public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewMo
         adapter = new PopularReleasesAdapter(getContext(),this);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_popular_release);
 
-        setSaveOnClickListener();
+        ArrayList<TrackPreview>tracks = mViewModel.getAddedTracks();
+        for(int i = 0 ; i < tracks.size() ; i++){
+            adapter.addItem(tracks.get(i).get_id(),tracks.get(i).getName());
+        }
 
-        recyclerView.setHasFixedSize(true);
+        setAddedTrackObserver();
+        setSaveOnClickListener();
+        setAddSongOnClickListener();
+        //recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        setupTopSongs();
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
+
+
+    }
+
+    private void setupTopSongs(){
         mViewModel.getMyTopSongs(OudUtils.getToken(getContext()),OudUtils.getUserId(getContext())).observe(getViewLifecycleOwner(), new Observer<TopTracks>() {
             @Override
             public void onChanged(TopTracks topTracks) {
                 TrackPreview [] tracks;
+                if(!mViewModel.firstTopSongsFetch)
+                    return;
+                mViewModel.firstTopSongsFetch = false;
                 tracks = topTracks.getTracks();
+
                 for(int i=0;i<tracks.length;i++){
                     adapter.addItem(tracks[i].get_id(),tracks[i].getName());
+                    mViewModel.addedTrack(tracks[i]);
                 }
             }
         });
     }
-
-
     private void setSaveOnClickListener(){
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +102,15 @@ public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewMo
                      String [] tracks = new String[tracksIds.size()];
                      tracks = tracksIds.toArray(tracks);
                      PopularTracksRequest popularTracksRequest= new PopularTracksRequest(tracks);
-                    ConnectionStatusListener connectionStatusListener = new ConnectionStatusListener() {
+                     ConnectionStatusListener connectionStatusListener = new ConnectionStatusListener() {
                         @Override
                         public void onConnectionSuccess() {
                             Toast.makeText(getContext(),"Top songs updated",Toast.LENGTH_LONG).show();
+                            adapter.clearAdapter();
+                            mViewModel.firstTopSongsFetch = true;
+                            mViewModel.myTopSongs = null;
+                            mViewModel.addedTracks.clear();
+                            setupTopSongs();
                         }
 
                         @Override
@@ -94,9 +118,63 @@ public class ArtistHomeFragment extends ConnectionAwareFragment<ArtistHomeViewMo
                             Toast.makeText(getContext(),"Top songs update failed",Toast.LENGTH_LONG).show();
                         }
                     };
+
                      mViewModel.savePopularSongs(OudUtils.getToken(getContext()),popularTracksRequest,connectionStatusListener);
+
+
             }
         });
+    }
+
+    private void setAddedTrackObserver(){
+        MutableLiveData<TrackPreview> addedSongId = mViewModel.getAddedTrackForCallBack();
+        addedSongId.observe(getViewLifecycleOwner(), new Observer<TrackPreview>() {
+            @Override
+            public void onChanged(TrackPreview trackPreview) {
+                String id  = trackPreview.get_id();
+                Boolean doesntExit = true;
+                ArrayList<String> tracksIds=  adapter.getTracksIds();
+                for(int i = 0 ;i<tracksIds.size();i++){
+                    if(id.equals(tracksIds.get(i)))
+                        doesntExit = false;
+                }
+                ArrayList<TrackPreview> addedTracks = mViewModel.getAddedTracks();
+                for(int i = 0 ;i<addedTracks.size();i++){
+                    if(id.equals(addedTracks.get(i).get_id()))
+                        doesntExit = false;
+                }
+                if(doesntExit){
+                adapter.addItem(trackPreview.get_id(),trackPreview.getName());
+                mViewModel.addedTrack(trackPreview);
+                }
+                else
+                    Toast.makeText(getContext(),"item already exists",Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
+
+    private void setAddSongOnClickListener(){
+        addSongButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(adapter.getItemCount()>=10){
+                    Toast.makeText(getContext(),"top songs can be 10 at most remove a song by swiping",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                MutableLiveData<TrackPreview> addedSongId = mViewModel.getAddedTrackForCallBack();
+
+                mViewModel.addedTracks.clear();
+                for(int i=0;i<adapter.getTracksIds().size();i++){
+                    TrackPreview trackPreview = new TrackPreview(adapter.tracksIds.get(i),adapter.tracksNames.get(i),null,1,1,null);
+                    mViewModel.addedTrack(trackPreview);
+                }
+                SongsListFragment.show(getActivity(),R.id.nav_host_fragment_artist,addedSongId);
+            }
+        });
+
     }
 
     public ArtistHomeFragment(Activity activity){

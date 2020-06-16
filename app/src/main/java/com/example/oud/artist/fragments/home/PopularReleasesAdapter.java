@@ -39,6 +39,16 @@ public class PopularReleasesAdapter extends  RecyclerView.Adapter<PopularRelease
         notifyItemInserted(getItemCount()-1);
    }
 
+    public void clearAdapter(){
+        while(getItemCount()>0){
+            tracksNames.remove(0);
+            tracksIds.remove(0);
+            notifyItemRemoved(0);
+        }
+
+
+    }
+
     public void removeItem(int position){
         tracksIds.remove(position);
         tracksNames.remove(position);

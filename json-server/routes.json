@@ -8,6 +8,9 @@
     "/browse/categories/:category_id/playlists?limit=:limit": "/category_list_:category_id", 
     "/browse/categories?limit=:limit": "/categories_list",
     
+    "/artists/user0/albums?offset=0&limit=50":"/artist_albums",
+
+
     "/me/tracks/contains*": "/are_these_tracks_liked",    
 
     "/playlists/playlist1/followers/contains*": "/user_doesn't_follow_playlist", 
@@ -110,6 +113,7 @@
     "/me": "/full_profile",
 
     "/artists/user0/albums?offset=0&limit=7":"/artist_albums",
+    
     
     "/artists/user0/albums?offset=6&limit=7":"/artist_more_albums",
 
